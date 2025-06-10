@@ -11,62 +11,66 @@ st.set_page_config(page_title="Digital DO Form - FBKM", layout="wide")
 st.markdown("""
     <style>
         body, .stApp {
-            background: linear-gradient(135deg, #dff6ff, #ffffff);
+            background-color: #f9f9f9;
             color: #000000;
+            font-family: "Segoe UI", sans-serif;
         }
 
         /* Headings */
-        h1, h2, h3, h4, h5 {
-            color: #003366;
+        h1, h2, h3, h4 {
+            color: #1a3e5f;
         }
 
-        /* Label teks input */
+        /* Form label */
         label {
             font-weight: 600 !important;
-            color: #003366 !important;
+            color: #1a3e5f !important;
         }
 
-        /* Input text */
+        /* Input fields */
         input[type="text"], .stTextInput input, .stDateInput input {
             background-color: #ffffff;
-            border: 1px solid #b3d9ff;
-            border-radius: 5px;
+            border: 1px solid #c2c2c2;
+            border-radius: 6px;
             padding: 6px;
-            color: #003366;
+            color: #1a3e5f;
         }
 
-        /* Data editor input */
+        /* Data Editor (manual input) */
         .stDataFrame input {
-            color: #003366 !important;
+            color: #1a3e5f !important;
             font-weight: bold;
         }
 
-        /* Submit button styling */
+        /* Submit Button */
         button[kind="primary"] {
-            background-color: #007acc;
+            background-color: #1a73e8;
             color: white;
-            border-radius: 8px;
-            padding: 0.5em 1.5em;
+            border-radius: 6px;
+            padding: 0.6em 1.2em;
             font-weight: bold;
+            border: none;
         }
+
         button[kind="primary"]:hover {
-            background-color: #005b99;
+            background-color: #155ab6;
             color: white;
         }
 
-        /* Horizontal line */
+        /* Divider line */
         hr {
             border: none;
             height: 1px;
-            background: #cce6ff;
+            background: #d3d3d3;
             margin: 20px 0;
         }
 
         /* Section headers */
         .stMarkdown h3 {
-            border-left: 5px solid #3399ff;
-            padding-left: 10px;
+            border-left: 5px solid #1a73e8;
+            padding-left: 12px;
         }
+    </style>
 """, unsafe_allow_html=True)
 
 st.title("🚚 Digital Delivery Order (DO) FBKM")
