@@ -44,13 +44,24 @@ st.markdown("""
 
         /* Submit Button */
         button[kind="primary"] {
-            background-color: #1a73e8;
-            color: white;
-            border-radius: 6px;
-            padding: 0.6em 1.2em;
-            font-weight: bold;
-            border: none;
-        }
+            /* Butang Submit */
+.stButton > button {
+    background-color: #1a73e8;
+    color: white !important;
+    border-radius: 6px;
+    padding: 0.6em 1.2em;
+    font-weight: 600;
+    font-size: 16px;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.stButton > button:hover {
+    background-color: #155ab6;
+    color: white !important;
+    cursor: pointer;
+}
+
 
         button[kind="primary"]:hover {
             background-color: #155ab6;
