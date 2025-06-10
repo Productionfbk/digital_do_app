@@ -10,11 +10,23 @@ from fpdf import FPDF
 st.set_page_config(page_title="Digital DO Form - FBKM", layout="wide")
 st.markdown("""
     <style>
-        body {
+        body, .stApp {
             background-color: #e0f7ff;
+            color: black;
         }
-        .stApp {
-            background-color: #e0f7ff;
+        /* Input oleh leader */
+        input[type="text"], .stTextInput input {
+            color: #003399 !important;
+            font-weight: bold;
+        }
+        /* Data editor input */
+        .stDataFrame input {
+            color: #003399 !important;
+            font-weight: bold;
+        }
+        /* Headings kekal hitam */
+        h1, h2, h3, h4, h5, h6 {
+            color: black !important;
         }
     </style>
 """, unsafe_allow_html=True)
