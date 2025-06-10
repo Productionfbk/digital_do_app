@@ -11,24 +11,62 @@ st.set_page_config(page_title="Digital DO Form - FBKM", layout="wide")
 st.markdown("""
     <style>
         body, .stApp {
-            background-color: #e0f7ff;
-            color: black;
+            background: linear-gradient(135deg, #dff6ff, #ffffff);
+            color: #000000;
         }
-        /* Input oleh leader */
-        input[type="text"], .stTextInput input {
-            color: #003399 !important;
-            font-weight: bold;
+
+        /* Headings */
+        h1, h2, h3, h4, h5 {
+            color: #003366;
         }
+
+        /* Label teks input */
+        label {
+            font-weight: 600 !important;
+            color: #003366 !important;
+        }
+
+        /* Input text */
+        input[type="text"], .stTextInput input, .stDateInput input {
+            background-color: #ffffff;
+            border: 1px solid #b3d9ff;
+            border-radius: 5px;
+            padding: 6px;
+            color: #003366;
+        }
+
         /* Data editor input */
         .stDataFrame input {
-            color: #003399 !important;
+            color: #003366 !important;
             font-weight: bold;
         }
-        /* Headings kekal hitam */
-        h1, h2, h3, h4, h5, h6 {
-            color: black !important;
+
+        /* Submit button styling */
+        button[kind="primary"] {
+            background-color: #007acc;
+            color: white;
+            border-radius: 8px;
+            padding: 0.5em 1.5em;
+            font-weight: bold;
         }
-    </style>
+        button[kind="primary"]:hover {
+            background-color: #005b99;
+            color: white;
+        }
+
+        /* Horizontal line */
+        hr {
+            border: none;
+            height: 1px;
+            background: #cce6ff;
+            margin: 20px 0;
+        }
+
+        /* Section headers */
+        .stMarkdown h3 {
+            border-left: 5px solid #3399ff;
+            padding-left: 10px;
+        }
 """, unsafe_allow_html=True)
 
 st.title("🚚 Digital Delivery Order (DO) FBKM")
