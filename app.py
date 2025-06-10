@@ -10,76 +10,20 @@ from fpdf import FPDF
 st.set_page_config(page_title="Digital DO Form - FBKM", layout="wide")
 st.markdown("""
     <style>
-        body, .stApp {
-            background-color: #f9f9f9;
-            color: #000000;
-            font-family: "Segoe UI", sans-serif;
-        }
-
-        /* Headings */
-        h1, h2, h3, h4 {
-            color: #1a3e5f;
-        }
-
-        /* Form label */
-        label {
-            font-weight: 600 !important;
-            color: #1a3e5f !important;
-        }
-
-        /* Input fields */
-        input[type="text"], .stTextInput input, .stDateInput input {
-            background-color: #ffffff;
-            border: 1px solid #c2c2c2;
+        .stButton > button {
+            background-color: #1a73e8;
+            color: white !important;
             border-radius: 6px;
-            padding: 6px;
-            color: #1a3e5f;
-        }
-
-        /* Data Editor (manual input) */
-        .stDataFrame input {
-            color: #1a3e5f !important;
-            font-weight: bold;
-        }
-
-        /* Submit Button */
-        button[kind="primary"] {
-            /* Butang Submit */
-.stButton > button {
-    background-color: #1a73e8;
-    color: white !important;
-    border-radius: 6px;
-    padding: 0.6em 1.2em;
-    font-weight: 600;
-    font-size: 16px;
-    border: none;
-    transition: background-color 0.3s ease;
-}
-
-.stButton > button:hover {
-    background-color: #155ab6;
-    color: white !important;
-    cursor: pointer;
-}
-
-
-        button[kind="primary"]:hover {
-            background-color: #155ab6;
-            color: white;
-        }
-
-        /* Divider line */
-        hr {
+            padding: 0.6em 1.2em;
+            font-weight: 600;
+            font-size: 16px;
             border: none;
-            height: 1px;
-            background: #d3d3d3;
-            margin: 20px 0;
         }
 
-        /* Section headers */
-        .stMarkdown h3 {
-            border-left: 5px solid #1a73e8;
-            padding-left: 12px;
+        .stButton > button:hover {
+            background-color: #155ab6;
+            color: white !important;
+            cursor: pointer;
         }
     </style>
 """, unsafe_allow_html=True)
