@@ -2,9 +2,8 @@ import streamlit as st
 import pandas as pd
 import os
 from datetime import date, datetime
-
-# Konfigurasi PDF - pastikan path betul untuk Windows
-PDF_CONFIG = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
+from xhtml2pdf import pisa
+from io import BytesIO
 
 # ========== Login Section ==========
 if "authenticated" not in st.session_state:
@@ -29,10 +28,10 @@ st.set_page_config(page_title="Digital DO Form - FBKM", layout="wide")
 # Auto-generate DO Number
 def generate_do_number():
     folder = "do_data"
-    if not os.path.exists(folder):
-        os.makedirs(folder)
     today_str = date.today().strftime("%Y-%m-%d")
-    csv_path = os.path.join(folder, today_str, "do_data.csv")
+    path_today = os.path.join(folder, today_str)
+    os.makedirs(path_today, exist_ok=True)
+    csv_path = os.path.join(path_today, "do_data.csv")
     if os.path.exists(csv_path):
         try:
             df_existing = pd.read_csv(csv_path)
@@ -44,7 +43,12 @@ def generate_do_number():
             return "DO-0001"
     return "DO-0001"
 
-# Initial states
+# Generate PDF using xhtml2pdf
+def convert_html_to_pdf(source_html, output_path):
+    with open(output_path, "wb") as output_file:
+        pisa.CreatePDF(source_html, dest=output_file)
+
+# Initial States
 if "do_number" not in st.session_state:
     st.session_state.do_number = generate_do_number()
 if "do_date" not in st.session_state:
@@ -76,7 +80,6 @@ with st.form("do_form"):
 
     st.markdown("---")
     st.subheader("📦 Item Details (maksimum 5 baris)")
-
     edited_df = st.data_editor(
         st.session_state.item_df,
         num_rows="fixed",
@@ -88,7 +91,6 @@ with st.form("do_form"):
     submitted = st.form_submit_button("🚀 Submit DO")
 
     if submitted:
-        # Validasi: Semua ruangan wajib diisi
         if customer_name.strip() == "":
             st.warning("⚠️ Sila isi 'Customer Name'")
         elif edited_df["Item"].str.strip().eq("").all():
@@ -125,13 +127,18 @@ with st.form("do_form"):
 
             # Simpan PDF
             pdf_html = f"""
+            <html>
+            <head><meta charset='utf-8'></head>
+            <body>
                 <h2>Delivery Order: {st.session_state.do_number}</h2>
-                <p>Date: {do_date.strftime('%Y-%m-%d')}</p>
-                <p>Customer: {customer_name}</p>
+                <p><strong>Date:</strong> {do_date.strftime('%Y-%m-%d')}</p>
+                <p><strong>Customer:</strong> {customer_name}</p>
                 {df_to_save.to_html(index=False)}
+            </body>
+            </html>
             """
             pdf_path = os.path.join(save_dir, f"{st.session_state.do_number}.pdf")
-            pdfkit.from_string(pdf_html, pdf_path, configuration=PDF_CONFIG)
+            convert_html_to_pdf(pdf_html, pdf_path)
 
             st.success("✅ DO submitted, CSV & PDF saved successfully!")
 
@@ -141,7 +148,7 @@ with st.form("do_form"):
             st.write(f"**Customer Name:** {customer_name}")
             st.dataframe(df_to_save, use_container_width=True)
 
-            # Reset for next entry
+            # Reset
             st.session_state.do_number = generate_do_number()
             st.session_state.customer_name = ""
             st.session_state.item_df = pd.DataFrame({
@@ -154,7 +161,7 @@ with st.form("do_form"):
                 "Quantity": [0] * 5
             })
 
-# Paparan DO dihantar hari ini
+# Paparan DO Hari Ini
 st.markdown("---")
 st.subheader("📋 DO Dihantar Hari Ini")
 today_folder = os.path.join("do_data", date.today().strftime("%Y-%m-%d"))
