@@ -5,12 +5,15 @@ from datetime import date, datetime
 from xhtml2pdf import pisa
 from io import BytesIO
 
+# Wajib: Ini mesti berada paling awal
+st.set_page_config(page_title="Digital DO Form - FBKM", layout="wide")
+
 # ========== Login Section ==========
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 if not st.session_state.authenticated:
-    st.image("fbkm_logo.png", width=200)  # Logo syarikat
+    st.image("fbkm_logo.png", width=200)
     st.title("Login Leader")
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
@@ -22,10 +25,7 @@ if not st.session_state.authenticated:
             st.error("Username atau password salah.")
     st.stop()
 
-# ========== Main App ==========
-st.set_page_config(page_title="Digital DO Form - FBKM", layout="wide")
-
-# Auto-generate DO Number
+# ========== Auto-generate DO Number ==========
 def generate_do_number():
     folder = "do_data"
     today_str = date.today().strftime("%Y-%m-%d")
@@ -43,12 +43,12 @@ def generate_do_number():
             return "DO-0001"
     return "DO-0001"
 
-# Generate PDF using xhtml2pdf
+# ========== PDF Generator ==========
 def convert_html_to_pdf(source_html, output_path):
     with open(output_path, "wb") as output_file:
         pisa.CreatePDF(source_html, dest=output_file)
 
-# Initial States
+# ========== Initial States ==========
 if "do_number" not in st.session_state:
     st.session_state.do_number = generate_do_number()
 if "do_date" not in st.session_state:
@@ -66,6 +66,7 @@ if "item_df" not in st.session_state:
         "Quantity": [0] * 5
     })
 
+# ========== Main Form ==========
 st.title("🚚 Digital Delivery Order (DO) FBKM")
 
 with st.form("do_form"):
@@ -148,7 +149,7 @@ with st.form("do_form"):
             st.write(f"**Customer Name:** {customer_name}")
             st.dataframe(df_to_save, use_container_width=True)
 
-            # Reset
+            # Reset borang
             st.session_state.do_number = generate_do_number()
             st.session_state.customer_name = ""
             st.session_state.item_df = pd.DataFrame({
@@ -161,7 +162,7 @@ with st.form("do_form"):
                 "Quantity": [0] * 5
             })
 
-# Paparan DO Hari Ini
+# ========== Paparan DO Hari Ini ==========
 st.markdown("---")
 st.subheader("📋 DO Dihantar Hari Ini")
 today_folder = os.path.join("do_data", date.today().strftime("%Y-%m-%d"))
