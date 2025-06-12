@@ -46,7 +46,11 @@ def generate_do_number():
 # ========== PDF Generator ==========
 def convert_html_to_pdf(source_html, output_path):
     with open(output_path, "wb") as output_file:
-        pisa.CreatePDF(source_html, dest=output_file)
+        result = pisa.CreatePDF(source_html, dest=output_file)
+        if result.err:
+            st.error("❌ PDF gagal dijana. Sila semak kandungan item atau simbol khas.")
+        else:
+            st.toast("📄 PDF berjaya dijana!", icon="📎")
 
 # ========== Initial States ==========
 if "do_number" not in st.session_state:
@@ -134,7 +138,8 @@ with st.form("do_form"):
                 <h2>Delivery Order: {st.session_state.do_number}</h2>
                 <p><strong>Date:</strong> {do_date.strftime('%Y-%m-%d')}</p>
                 <p><strong>Customer:</strong> {customer_name}</p>
-                {df_to_save.to_html(index=False)}
+                {df_to_save.to_html(index=False, escape=False)}
+
             </body>
             </html>
             """
