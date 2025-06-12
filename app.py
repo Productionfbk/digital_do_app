@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import os
 from datetime import date, datetime
-import pdfkit
 
 # Konfigurasi PDF - pastikan path betul untuk Windows
 PDF_CONFIG = pdfkit.configuration(wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
