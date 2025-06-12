@@ -45,12 +45,21 @@ def generate_do_number():
 
 # ========== PDF Generator ==========
 def convert_html_to_pdf(source_html, output_path):
-    with open(output_path, "wb") as output_file:
-        result = pisa.CreatePDF(source_html, dest=output_file)
-        if result.err:
-            st.error("❌ PDF gagal dijana. Sila semak kandungan item atau simbol khas.")
-        else:
-            st.toast("📄 PDF berjaya dijana!", icon="📎")
+    try:
+        with open(output_path, "wb") as output_file:
+            result = pisa.CreatePDF(source_html, dest=output_file)
+            if result.err:
+                st.error("❌ Gagal jana PDF. Sila hubungi admin.")
+                with open("debug.log", "a", encoding="utf-8") as log:
+                    log.write(f"[{datetime.now()}] PDF error: {result.err}\n")
+                return False
+        return True
+    except Exception as e:
+        st.error("❌ Ralat semasa jana PDF.")
+        with open("debug.log", "a", encoding="utf-8") as log:
+            log.write(f"[{datetime.now()}] Exception: {str(e)}\n")
+        return False
+
 
 # ========== Initial States ==========
 if "do_number" not in st.session_state:
@@ -130,7 +139,7 @@ with st.form("do_form"):
             df_to_save = pd.DataFrame(rows_to_save)
             df_to_save.to_csv(csv_path, mode="a", header=not os.path.exists(csv_path), index=False)
 
-            # Simpan PDF
+# Generate PDF HTML
             pdf_html = f"""
             <html>
             <head><meta charset='utf-8'></head>
@@ -138,23 +147,33 @@ with st.form("do_form"):
                 <h2>Delivery Order: {st.session_state.do_number}</h2>
                 <p><strong>Date:</strong> {do_date.strftime('%Y-%m-%d')}</p>
                 <p><strong>Customer:</strong> {customer_name}</p>
-                {df_to_save.to_html(index=False, escape=False)}
-
+                {df_to_save.to_html(index=False)}
             </body>
             </html>
             """
-            pdf_path = os.path.join(save_dir, f"{st.session_state.do_number}.pdf")
-            convert_html_to_pdf(pdf_html, pdf_path)
 
-            st.success("✅ DO submitted, CSV & PDF saved successfully!")
+# Simpan HTML untuk debugging
+            html_debug_path = os.path.join(save_dir, f"{st.session_state.do_number}.html")
+            with open(html_debug_path, "w", encoding="utf-8") as html_file:
+                html_file.write(pdf_html)
 
+# PDF path with timestamp
+            pdf_path = os.path.join(save_dir, f"{st.session_state.do_number}_{datetime.now().strftime('%H%M%S')}.pdf")
+            pdf_success = convert_html_to_pdf(pdf_html, pdf_path)
+
+            if pdf_success:
+                st.success("✅ DO submitted, CSV & PDF saved successfully!")
+            else:
+                st.warning("⚠️ DO submitted, tetapi PDF gagal dijana. Semak fail debug.log atau fail HTML.")
+
+# Paparan semula
             st.markdown("### 📄 DO Summary:")
             st.write(f"**DO Number:** {st.session_state.do_number}")
             st.write(f"**DO Date:** {do_date.strftime('%Y-%m-%d')}")
             st.write(f"**Customer Name:** {customer_name}")
             st.dataframe(df_to_save, use_container_width=True)
 
-            # Reset borang
+# Reset borang
             st.session_state.do_number = generate_do_number()
             st.session_state.customer_name = ""
             st.session_state.item_df = pd.DataFrame({
